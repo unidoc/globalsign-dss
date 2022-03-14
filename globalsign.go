@@ -34,13 +34,8 @@ func (s *globalSignDSSService) Login(req *LoginRequest) (*LoginResponse, error) 
 	}
 
 	path := baseAPI + "/login"
-	r, err := s.client.NewRequest(http.MethodPost, path, req)
-	if err != nil {
-		return nil, err
-	}
-
 	result := new(LoginResponse)
-	err = s.client.Do(r, result)
+	err := s.client.DoNewRequest(http.MethodPost, path, result, req)
 	if err != nil {
 		return nil, err
 	}
@@ -51,13 +46,9 @@ func (s *globalSignDSSService) Login(req *LoginRequest) (*LoginResponse, error) 
 // Identity GlobalSign DSS identity API service.
 func (s *globalSignDSSService) Identity(req *IdentityRequest) (*IdentityResponse, error) {
 	path := baseAPI + "/identity"
-	r, err := s.client.NewRequest(http.MethodPost, path, req)
-	if err != nil {
-		return nil, err
-	}
 
 	result := new(IdentityResponse)
-	err = s.client.Do(r, result)
+	err := s.client.DoNewRequest(http.MethodPost, path, result, req)
 	if err != nil {
 		return nil, err
 	}
@@ -72,13 +63,8 @@ func (s *globalSignDSSService) Timestamp(req *TimestampRequest) (*TimestampRespo
 	}
 
 	path := baseAPI + "/timestamp/" + req.Digest
-	r, err := s.client.NewRequest(http.MethodGet, path, struct{}{})
-	if err != nil {
-		return nil, err
-	}
-
 	result := new(TimestampResponse)
-	err = s.client.Do(r, result)
+	err := s.client.DoNewRequest(http.MethodGet, path, result, struct{}{})
 	if err != nil {
 		return nil, err
 	}
@@ -93,13 +79,9 @@ func (s *globalSignDSSService) Sign(req *SigningRequest) (*SigningResponse, erro
 	}
 
 	path := baseAPI + "/identity/" + req.ID + "/sign/" + req.Digest
-	r, err := s.client.NewRequest(http.MethodGet, path, struct{}{})
-	if err != nil {
-		return nil, err
-	}
 
 	result := new(SigningResponse)
-	err = s.client.Do(r, result)
+	err := s.client.DoNewRequest(http.MethodGet, path, result, struct{}{})
 	if err != nil {
 		return nil, err
 	}
@@ -110,13 +92,9 @@ func (s *globalSignDSSService) Sign(req *SigningRequest) (*SigningResponse, erro
 // CertificatePath GlobalSign DSS certificate_path API service.
 func (s *globalSignDSSService) CertificatePath() (*CertificatePathResponse, error) {
 	path := baseAPI + "/certificate_path"
-	r, err := s.client.NewRequest(http.MethodGet, path, struct{}{})
-	if err != nil {
-		return nil, err
-	}
 
 	result := new(CertificatePathResponse)
-	err = s.client.Do(r, result)
+	err := s.client.DoNewRequest(http.MethodGet, path, result, struct{}{})
 	if err != nil {
 		return nil, err
 	}
@@ -127,13 +105,9 @@ func (s *globalSignDSSService) CertificatePath() (*CertificatePathResponse, erro
 // TrusChain GlobalSign DSS trustchain API service.
 func (s *globalSignDSSService) TrustChain() (*TrustChainResponse, error) {
 	path := baseAPI + "/certificate_path"
-	r, err := s.client.NewRequest(http.MethodGet, path, struct{}{})
-	if err != nil {
-		return nil, err
-	}
-
 	result := new(TrustChainResponse)
-	err = s.client.Do(r, result)
+
+	err := s.client.DoNewRequest(http.MethodGet, path, result, struct{}{})
 	if err != nil {
 		return nil, err
 	}

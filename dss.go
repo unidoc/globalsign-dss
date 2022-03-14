@@ -23,8 +23,7 @@ type DSSService interface {
 	DSSIdentityTimestamp(context.Context, string, *IdentityRequest, []byte) ([]byte, error)
 }
 
-// DSSIdentity represent acquired credential
-// from login and identity request.
+// DSSIdentity represent acquired credential from login and identity request.
 type DSSIdentity struct {
 	ID          string
 	SigningCert string
