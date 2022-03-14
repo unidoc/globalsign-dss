@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-// DSSService .
+// DSSService availables GlobalSign Digital Signing Service.
 type DSSService interface {
 	Login(*LoginRequest) (*LoginResponse, error)
 	Identity(*IdentityRequest) (*IdentityResponse, error)
@@ -16,7 +16,8 @@ type DSSService interface {
 	Sign(*SigningRequest) (*SigningResponse, error)
 	CertificatePath() (*CertificatePathResponse, error)
 	TrustChain() (*TrustChainResponse, error)
-	// DSS Identity and sign process.
+
+	// DSS Identity and sign process services.
 	DSSGetIdentity(context.Context, string, *IdentityRequest) (*DSSIdentity, error)
 	DSSIdentitySign(context.Context, string, *IdentityRequest, []byte) ([]byte, error)
 	DSSIdentityTimestamp(context.Context, string, *IdentityRequest, []byte) ([]byte, error)
@@ -25,23 +26,15 @@ type DSSService interface {
 // DSSIdentity represent acquired credential
 // from login and identity request.
 type DSSIdentity struct {
-	// Identity.
-	ID string
-
-	// SigningCert.
+	ID          string
 	SigningCert string
-
-	// OCSP.
-	OCSP string
-
-	//CA Certificate.
-	CA string
-
-	// Ts timestamp.
-	Ts time.Time
+	OCSP        string
+	CA          string
+	Ts          time.Time
 }
 
-// GetIdentity .
+// DSSGetIdentity get identity information, signing certificate, OCSP, and CA certificat -
+// automatically request identity if token expired.
 func (s *globalSignDSSService) DSSGetIdentity(ctx context.Context, signer string, req *IdentityRequest) (*DSSIdentity, error) {
 	// Check identity in vault.
 	identity, ok := s.client.vault.Get(signer)
@@ -78,7 +71,8 @@ func (s *globalSignDSSService) DSSGetIdentity(ctx context.Context, signer string
 	return identity, nil
 }
 
-// Sign .
+// DSSIdentitySign request signature with signer and identity,
+// automatically request identity if token expired.
 func (s *globalSignDSSService) DSSIdentitySign(ctx context.Context, signer string, identityReq *IdentityRequest, digest []byte) ([]byte, error) {
 	err := s.client.ensureToken(ctx)
 	if err != nil {
@@ -103,7 +97,7 @@ func (s *globalSignDSSService) DSSIdentitySign(ctx context.Context, signer strin
 	return hex.DecodeString(signatureResp.Signature)
 }
 
-// Timestamp .
+// DSSIdentityTimestamp add timestamp token to signer, automatically request identity if token expired.
 func (s *globalSignDSSService) DSSIdentityTimestamp(ctx context.Context, signer string, identityReq *IdentityRequest, digest []byte) ([]byte, error) {
 	err := s.client.ensureToken(ctx)
 	if err != nil {

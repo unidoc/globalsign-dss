@@ -1,10 +1,11 @@
 package globalsign
 
-// IdentityRequest .
+// IdentityRequest GlobalSign API request parameters of `/identity` endpoint.
 type IdentityRequest struct {
 	SubjectDn SubjectDn `json:"subject_dn"`
 }
 
+// SubjectDn parameter of `subject_dn`.
 type SubjectDn struct {
 	Country                                        string                    `json:"country,omitempty"`
 	State                                          string                    `json:"state,omitempty"`
@@ -21,12 +22,13 @@ type SubjectDn struct {
 	ExtraAttributes                                []SubjectDnExtraAttribute `json:"extra_attributes,omitempty"`
 }
 
+// SubjectDnExtraAttribute extra attributes for parameter `extra_attributes`.
 type SubjectDnExtraAttribute struct {
 	Type string `json:"type"`
 	Name string `json:"name"`
 }
 
-// IdentityResponse .
+// IdentityResponse GlobalSign API response of `/identity` endpoint.
 type IdentityResponse struct {
 	ID           string `json:"id"`
 	SigningCert  string `json:"signing_cert"`

@@ -5,14 +5,14 @@ import (
 	"time"
 )
 
-// VaultItem represents a record identity
+// VaultItem represents a record identity.
 type VaultItem struct {
 	sync.RWMutex
 	data    *DSSIdentity
 	expires *time.Time
 }
 
-// immediate expiration
+// expire immediate expiration of vault item.
 func (item *VaultItem) expire() {
 	item.Lock()
 	expiration := time.Now()
@@ -27,6 +27,7 @@ func (item *VaultItem) touch(duration time.Duration) {
 	item.Unlock()
 }
 
+// expired return `true` if vault item expired.
 func (item *VaultItem) expired() bool {
 	var value bool
 	item.RLock()
@@ -39,10 +40,10 @@ func (item *VaultItem) expired() bool {
 	return value
 }
 
-// ExpiredIdentityFunc is a callback which will be called once identity expired
+// ExpiredIdentityFunc is a callback which will be called once identity expired.
 type ExpiredIdentityFunc func(key string, identity *DSSIdentity)
 
-// IdentityVault store DSS identity until its expired
+// IdentityVault store DSS identity until its expired.
 type IdentityVault struct {
 	mutex   sync.RWMutex
 	ttl     time.Duration
@@ -50,7 +51,7 @@ type IdentityVault struct {
 	expfunc ExpiredIdentityFunc
 }
 
-// Set is a thread-safe way to add identity to cache
+// Set is a thread-safe way to add identity to cache.
 func (cache *IdentityVault) Set(key string, identity *DSSIdentity) {
 	cache.mutex.Lock()
 	item := &VaultItem{data: identity}
@@ -60,7 +61,7 @@ func (cache *IdentityVault) Set(key string, identity *DSSIdentity) {
 	cache.mutex.Unlock()
 }
 
-// Get is a thread-safe way to lookup items
+// Get is a thread-safe way to lookup items.
 func (cache *IdentityVault) Get(key string) (data *DSSIdentity, found bool) {
 	cache.mutex.Lock()
 	item, exists := cache.items[key]
@@ -76,7 +77,7 @@ func (cache *IdentityVault) Get(key string) (data *DSSIdentity, found bool) {
 }
 
 // Count returns the number of items in the cache
-// (helpful for tracking memory leaks)
+// (helpful for tracking memory leaks).
 func (cache *IdentityVault) Count() int {
 	cache.mutex.RLock()
 	count := len(cache.items)
@@ -84,7 +85,7 @@ func (cache *IdentityVault) Count() int {
 	return count
 }
 
-// Del remove item without trigger callback
+// Del remove item without trigger callback.
 func (cache *IdentityVault) Del(key string) {
 	cache.mutex.Lock()
 	_, exists := cache.items[key]
@@ -92,7 +93,6 @@ func (cache *IdentityVault) Del(key string) {
 		delete(cache.items, key)
 	}
 	cache.mutex.Unlock()
-	return
 }
 
 func (cache *IdentityVault) cleanup() {
@@ -125,7 +125,7 @@ func (cache *IdentityVault) startCleanupTimer() {
 	})()
 }
 
-// NewIdentityVault is a helper to create instance of the indetities vault struct
+// NewIdentityVault is a helper to create instance of the indetities vault struct.
 func NewIdentityVault(duration time.Duration) *IdentityVault {
 	cache := &IdentityVault{
 		ttl:   duration,

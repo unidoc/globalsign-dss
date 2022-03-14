@@ -14,13 +14,13 @@ import (
 	"time"
 )
 
-// Client GlobalSign sdk client.
+// Client globasign client.
 type Client struct {
 	sync.RWMutex
 	// httpClient used to communicate with the API.
 	httpClient *http.Client
 
-	// BaseURL base url of API.
+	// BaseURL base URL of API.
 	BaseURL *url.URL
 
 	// userAgent user agent for client header request.
@@ -38,11 +38,11 @@ type Client struct {
 	// vault store identity information.
 	vault *IdentityVault
 
-	// Options.
+	// options globalsign client options.
 	options *ClientOptions
 }
 
-// ClientOptions options for client.
+// ClientOptions options for the globalsign client.
 type ClientOptions struct {
 	// BaseURL base url of API.
 	BaseURL *url.URL
@@ -60,7 +60,7 @@ type ClientOptions struct {
 	KeyFilePath string
 }
 
-// NewClient initiate client with `API Key`, `API Secret`, `Certificate file path`, `Private Key file path` and return globalsign sdk client.
+// NewClient initiates client with `API Key`, `API Secret`, `Certificate file path`, `Private Key file path` and returns the globalsign client.
 func NewClient(apiKey, apiSecret, certPath, keyPath string) (*Client, error) {
 	baseURL, err := url.Parse(defaultBaseURL)
 	if err != nil {
@@ -77,9 +77,9 @@ func NewClient(apiKey, apiSecret, certPath, keyPath string) (*Client, error) {
 	return NewClientWithOpts(opts)
 }
 
-// NewClientWithOpts return GlobalSign sdk client and apply options.
+// NewClientWithOpts initiates client with `ClientOptions` and returns the globasign client.
 func NewClientWithOpts(opts *ClientOptions) (*Client, error) {
-	// create a client
+	// Create a http.Client with TLS.
 	httpClient, err := newHTTPClientWithCertificate(opts.CertFilePath, opts.KeyFilePath)
 	if err != nil {
 		return nil, err
@@ -96,7 +96,7 @@ func NewClientWithOpts(opts *ClientOptions) (*Client, error) {
 	return c, nil
 }
 
-// newHTTPClientWithCertificate initiate HTTP client with tls.
+// newHTTPClientWithCertificate initiate HTTP client with TLS.
 func newHTTPClientWithCertificate(certPath, keyPath string) (*http.Client, error) {
 	cert, err := tls.LoadX509KeyPair(certPath, keyPath)
 	if err != nil {
@@ -121,6 +121,7 @@ func newHTTPClientWithCertificate(certPath, keyPath string) (*http.Client, error
 	return &http.Client{Transport: tr}, nil
 }
 
+// DoNewRequest create new http client request and process the request.
 func (c *Client) DoNewRequest(method, path string, result interface{}, params interface{}) error {
 	// Generate request.
 	req, err := c.NewRequest(method, path, params)
@@ -138,6 +139,7 @@ func (c *Client) DoNewRequest(method, path string, result interface{}, params in
 	return nil
 }
 
+// NewRequest create new http client request.
 func (c *Client) NewRequest(method string, path string, params interface{}) (*http.Request, error) {
 	// Get base url.
 	baseURL := *c.BaseURL
@@ -185,6 +187,7 @@ func (c *Client) NewRequest(method string, path string, params interface{}) (*ht
 	return req, nil
 }
 
+// Do process the http request.
 func (c *Client) Do(req *http.Request, result interface{}) error {
 	// Authenticate request.
 	if c.authToken != nil {
@@ -218,12 +221,12 @@ func (c *Client) Do(req *http.Request, result interface{}) error {
 	return err
 }
 
-// SetAuthToken set authentication token to client.
+// SetAuthToken sets authentication token to client.
 func (c *Client) SetAuthToken(at string) {
 	c.authToken = &at
 }
 
-// SetUserAgent set user agent to client.
+// SetUserAgent sets user agent to client.
 func (c *Client) SetUserAgent(ua string) {
 	c.userAgent = ua
 }

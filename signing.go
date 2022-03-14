@@ -1,6 +1,6 @@
 package globalsign
 
-// SigningRequest .
+// SigningRequest GlobalSign API request parameters of `/identity/{id}/sign/{digest}` endpoint.
 type SigningRequest struct {
 	ID string `json:"id"`
 
@@ -8,7 +8,7 @@ type SigningRequest struct {
 	Digest string `json:"digest"`
 }
 
-// SigningResponse .
+// SigningResponse GlobalSign API response of `/identity/{id}/sign/{digest}` endpoint.
 type SigningResponse struct {
 	Signature string `json:"signature"`
 }
