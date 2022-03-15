@@ -53,7 +53,7 @@ func TestSign(t *testing.T) {
 		t.Fatalf("Login failed: %v", err.Error())
 	}
 
-	t.Logf("Access Token: %s", resp)
+	t.Logf("Access Token: %s\n", resp.AccessToken)
 	c.SetAuthToken(resp.AccessToken)
 
 	// get identity
@@ -64,16 +64,16 @@ func TestSign(t *testing.T) {
 		t.Fatalf("Identity failed: %v", err.Error())
 	}
 
-	t.Logf("ID: %s", identity.ID)
-	t.Logf("Signing Cert: %s", identity.SigningCert)
-	t.Logf("OCSP Resp: %s", identity.OCSPResponse)
+	t.Logf("ID: %s\n", identity.ID)
+	t.Logf("Signing Cert: %s\n", identity.SigningCert)
+	t.Logf("OCSP Response: %s\n", identity.OCSPResponse)
 
 	// get certificate path
 	cert, err := c.DSSService.CertificatePath()
 	if err != nil {
-		t.Fatalf("CerticatePath failed: %v\n", err.Error())
+		t.Fatalf("CerticatePath failed: %s\n", err.Error())
 	}
-	t.Logf("CA: %s", cert.CA)
+	t.Logf("CA Certificate: %s\n", cert.CA)
 
 	// Create certificate chain from signing and CA cert.
 	var certChain []*x509.Certificate
@@ -87,7 +87,7 @@ func TestSign(t *testing.T) {
 
 		issuer, err := x509.ParseCertificate(block.Bytes)
 		if err != nil {
-			t.Fatalf("x509.Certificate parse failed: %v\n", err.Error())
+			t.Fatalf("x509.Certificate parse failed: %s\n", err.Error())
 		}
 
 		certChain = append(certChain, issuer)
@@ -103,7 +103,7 @@ func TestSign(t *testing.T) {
 
 		issuer, err := x509.ParseCertificate(block.Bytes)
 		if err != nil {
-			t.Fatalf("x509.Certificate parse failed: %v\n", err.Error())
+			t.Fatalf("x509.Certificate parse failed: %s\n", err.Error())
 		}
 
 		certChain = append(certChain, issuer)
@@ -111,14 +111,14 @@ func TestSign(t *testing.T) {
 
 	ocspDecoded, err := base64.StdEncoding.DecodeString(identity.OCSPResponse)
 	if err != nil {
-		t.Fatalf("OCSP decode failed: %v\n", err.Error())
+		t.Fatalf("OCSP decode failed: %s\n", err.Error())
 	}
 
 	ocspResponse, err := ocsp.ParseResponse(ocspDecoded, certChain[1])
 	if err != nil {
-		t.Fatalf("OCSP Error: %v\n", err.Error())
+		t.Fatalf("OCSP Error: %s\n", err.Error())
 	}
-	t.Logf("OCSP: %v", ocspResponse)
+	t.Logf("OCSP: %v\n", ocspResponse)
 
 	// Mock digest.
 	digest := sha256.Sum256([]byte(fmt.Sprintf("%x", time.Now().Unix())))
@@ -126,31 +126,31 @@ func TestSign(t *testing.T) {
 	// Encode to hex.
 	digestHex := strings.ToUpper(hex.EncodeToString(digest[:]))
 
-	t.Logf("Digest: %s", digestHex)
+	t.Logf("Digest: %s\n", digestHex)
 
 	// Get timestamp.
 	timestampResp, err := c.DSSService.Timestamp(&TimestampRequest{
 		Digest: digestHex,
 	})
 	if err != nil {
-		t.Fatalf("Timestamp failed: %v\n", err.Error())
+		t.Fatalf("Timestamp failed: %s\n", err.Error())
 	}
 
-	t.Logf("Timestamp: %s", timestampResp.Token)
+	t.Logf("Timestamp: %s\n", timestampResp.Token)
 
 	decodedTs, err := base64.StdEncoding.DecodeString(timestampResp.Token)
 	if err != nil {
-		t.Fatalf("Error while decode timestamp token: %v\n", err.Error())
+		t.Fatalf("Error while decode timestamp token: %s\n", err.Error())
 	}
 
-	t.Logf("Timestamp: %s", string(decodedTs))
+	t.Logf("Timestamp: %s\n", string(decodedTs))
 
 	tsResp, err := timestamp.Parse(decodedTs)
 	if err != nil {
 		t.Fatalf("Timestamp parse failed: %v\n", err.Error())
 	}
 
-	t.Logf("Timestamp Token: %v", tsResp)
+	t.Logf("Timestamp Token: %v\n", tsResp)
 
 	// Get signature.
 	signature, err := c.DSSService.Sign(&SigningRequest{
@@ -159,23 +159,44 @@ func TestSign(t *testing.T) {
 	})
 	if err != nil {
 		t.Error(err)
-		t.Fatalf("Sign failed: %v\n", err.Error())
+		t.Fatalf("Sign failed: %s\n", err.Error())
 	}
 
-	t.Logf("Signature: %s", signature.Signature)
+	t.Logf("Signature: %s\n", signature.Signature)
 
 	signatureHash, err := hex.DecodeString(signature.Signature)
 	if err != nil {
-		t.Fatalf("Hex decode failed: %v\n", err.Error())
+		t.Fatalf("Hex decode failed: %s\n", err.Error())
 	}
 
 	t.Logf("Signature: %s", string(signatureHash))
 
 	trustChain, err := c.DSSService.TrustChain()
 	if err != nil {
-		t.Fatalf("TrusChain failed: %v\n", err.Error())
+		t.Fatalf("TrusChain failed: %s\n", err.Error())
 	}
 
-	t.Logf("Trust Chain trustchain: %v", trustChain.Trustchain)
-	t.Logf("Trust Chain ocsp_revocation_info: %v", trustChain.OcspRevocationInfo)
+	t.Logf("Trust Chain trustchain: %v\n", trustChain.Trustchain)
+	t.Logf("Trust Chain ocsp_revocation_info: %v\n", trustChain.OcspRevocationInfo)
+
+	validationPolicy, err := c.DSSService.ValidationPolicy()
+	if err != nil {
+		t.Fatalf("ValidationPolicy failed: %s\n", err.Error())
+	}
+
+	t.Logf("Validation Policy: %v\n", validationPolicy)
+
+	quotasSignatures, err := c.DSSService.QuotasSignatures()
+	if err != nil {
+		t.Fatalf("QuotasSignatures failed: %s\n", err.Error())
+	}
+
+	t.Logf("Quotas Signatures: %v\n", quotasSignatures.Value)
+
+	quotasTimestamps, err := c.DSSService.QuotasTimestamps()
+	if err != nil {
+		t.Fatalf("QuotasTimestamps failed: %s\n", err.Error())
+	}
+
+	t.Logf("Quotas Timestamps: %v\n", quotasTimestamps.Value)
 }

@@ -19,7 +19,7 @@ const (
 
 // Errors definition.
 var (
-	ErrDigestRequired = errors.New("File digest required.")
+	ErrDigestRequired = errors.New("File digest required")
 )
 
 type globalSignDSSService struct {
