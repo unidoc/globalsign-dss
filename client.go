@@ -221,12 +221,12 @@ func (c *Client) Do(req *http.Request, result interface{}) error {
 	return err
 }
 
-// SetAuthToken sets authentication token to client.
+// SetAuthToken sets authentication token of the client.
 func (c *Client) SetAuthToken(at string) {
 	c.authToken = &at
 }
 
-// SetUserAgent sets user agent to client.
+// SetUserAgent sets user agent of the client.
 func (c *Client) SetUserAgent(ua string) {
 	c.userAgent = ua
 }
