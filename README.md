@@ -27,6 +27,10 @@ if err != nil {
 }
 ```
 
+# License Information
+This source code package is licensed with MIT license.  
+However, when used in a software package with UniPDF it obeys the UniDoc EULA which is available at: https://unidoc.io/eula/
+
 # Credits
 Thanks to [@wja-id](https://github.com/wja-id)  
 
