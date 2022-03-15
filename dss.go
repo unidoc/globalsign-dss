@@ -16,6 +16,9 @@ type DSSService interface {
 	Sign(*SigningRequest) (*SigningResponse, error)
 	CertificatePath() (*CertificatePathResponse, error)
 	TrustChain() (*TrustChainResponse, error)
+	ValidationPolicy() (*ValidationPolicyResponse, error)
+	QuotasSignatures() (*QuotasResponse, error)
+	QuotasTimestamps() (*QuotasResponse, error)
 
 	// DSS Identity and sign process services.
 	DSSGetIdentity(context.Context, string, *IdentityRequest) (*DSSIdentity, error)

@@ -176,5 +176,6 @@ func TestSign(t *testing.T) {
 		t.Fatalf("TrusChain failed: %v\n", err.Error())
 	}
 
-	t.Logf("Trust Chain: %v", trustChain.Path)
+	t.Logf("Trust Chain trustchain: %v", trustChain.Trustchain)
+	t.Logf("Trust Chain ocsp_revocation_info: %v", trustChain.OcspRevocationInfo)
 }

@@ -1,5 +1,9 @@
 package globalsign
 
+import (
+	"net/http"
+)
+
 // IdentityRequest GlobalSign API request parameters of `/identity` endpoint.
 type IdentityRequest struct {
 	SubjectDn SubjectDn `json:"subject_dn"`
@@ -33,4 +37,17 @@ type IdentityResponse struct {
 	ID           string `json:"id"`
 	SigningCert  string `json:"signing_cert"`
 	OCSPResponse string `json:"ocsp_response"`
+}
+
+// Identity GlobalSign DSS identity API service.
+func (s *globalSignDSSService) Identity(req *IdentityRequest) (*IdentityResponse, error) {
+	path := baseAPI + "/identity"
+
+	result := new(IdentityResponse)
+	err := s.client.DoNewRequest(http.MethodPost, path, result, req)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
