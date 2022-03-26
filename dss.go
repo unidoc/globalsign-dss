@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-// DSSService availables GlobalSign Digital Signing Service.
+// DSSService implements GlobalSign Digital Signing Service.
 type DSSService interface {
 	Login(*LoginRequest) (*LoginResponse, error)
 	Identity(*IdentityRequest) (*IdentityResponse, error)
