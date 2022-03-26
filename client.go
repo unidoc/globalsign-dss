@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-// Client globasign client.
+// Client implements a client for Globalsign Atlas DSS API service.
 type Client struct {
 	sync.RWMutex
 	// httpClient used to communicate with the API.
@@ -60,7 +60,8 @@ type ClientOptions struct {
 	KeyFilePath string
 }
 
-// NewClient initiates client with `API Key`, `API Secret`, `Certificate file path`, `Private Key file path` and returns the globalsign client.
+// NewClient initiates client with API Key, API Secret, Certificate file path, Private Key file path
+// and returns the globalsign client.
 func NewClient(apiKey, apiSecret, certPath, keyPath string) (*Client, error) {
 	baseURL, err := url.Parse(defaultBaseURL)
 	if err != nil {
