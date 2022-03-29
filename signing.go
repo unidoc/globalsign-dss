@@ -8,7 +8,7 @@ import (
 type SigningRequest struct {
 	ID string `json:"id"`
 
-	// a hex encoded sha256 checksum for source file
+	// Digest is the hex encoded SHA256 checksum of a source file.
 	Digest string `json:"digest"`
 }
 

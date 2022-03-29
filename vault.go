@@ -125,7 +125,7 @@ func (cache *IdentityVault) startCleanupTimer() {
 	})()
 }
 
-// NewIdentityVault is a helper to create instance of the indetities vault struct.
+// NewIdentityVault is a helper to create instance of the identities vault struct.
 func NewIdentityVault(duration time.Duration) *IdentityVault {
 	cache := &IdentityVault{
 		ttl:   duration,

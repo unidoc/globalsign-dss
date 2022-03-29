@@ -35,7 +35,7 @@ type DSSIdentity struct {
 	Ts          time.Time
 }
 
-// DSSGetIdentity get identity information, signing certificate, OCSP, and CA certificat -
+// DSSGetIdentity get identity information, signing certificate, OCSP, and CA certificate -
 // automatically request identity if token expired.
 func (s *globalSignDSSService) DSSGetIdentity(ctx context.Context, signer string, req *IdentityRequest) (*DSSIdentity, error) {
 	// Check identity in vault.
@@ -56,7 +56,7 @@ func (s *globalSignDSSService) DSSGetIdentity(ctx context.Context, signer string
 		return nil, err
 	}
 
-	// Request cs certificate.
+	// Request CA certificate.
 	certResp, err := s.client.DSSService.CertificatePath()
 	if err != nil {
 		return nil, err

@@ -237,11 +237,8 @@ func checkResponse(r *http.Response) error {
 		return nil
 	}
 
-	data, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		return err
-	}
-	return fmt.Errorf(string(data))
+	var data []byte
+	return json.NewDecoder(r.Body).Decode(&data)
 }
 
 // Response wraps standard http Response with default response fields
