@@ -37,8 +37,8 @@ func TestSign(t *testing.T) {
 
 	co := &ClientOptions{
 		BaseURL:      baseURL,
-		ApiKey:       apiKey,
-		ApiSecret:    apiSecret,
+		APIKey:       apiKey,
+		APISecret:    apiSecret,
 		CertFilePath: certPath,
 		KeyFilePath:  keyPath,
 	}

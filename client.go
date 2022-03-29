@@ -47,11 +47,11 @@ type ClientOptions struct {
 	// BaseURL base url of API.
 	BaseURL *url.URL
 
-	// ApiKey API key credentials.
-	ApiKey string
+	// APIKey API key credentials.
+	APIKey string
 
-	// ApiSecret API secret credentials.
-	ApiSecret string
+	// APISecret API secret credentials.
+	APISecret string
 
 	// CertFilePath path file to mTLS cert file.
 	CertFilePath string
@@ -70,8 +70,8 @@ func NewClient(apiKey, apiSecret, certPath, keyPath string) (*Client, error) {
 
 	opts := &ClientOptions{
 		BaseURL:      baseURL,
-		ApiKey:       apiKey,
-		ApiSecret:    apiSecret,
+		APIKey:       apiKey,
+		APISecret:    apiSecret,
 		CertFilePath: certPath,
 		KeyFilePath:  keyPath,
 	}
@@ -256,8 +256,8 @@ func (c *Client) ensureToken(ctx context.Context) error {
 	// If token not yet acquired or expired.
 	if token == "" || time.Since(tokenTs) > authTokenTTL {
 		resp, err := c.DSSService.Login(&LoginRequest{
-			APIKey:    c.options.ApiKey,
-			APISecret: c.options.ApiSecret,
+			APIKey:    c.options.APIKey,
+			APISecret: c.options.APISecret,
 		})
 		if err != nil {
 			return err
