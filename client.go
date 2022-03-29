@@ -211,15 +211,7 @@ func (c *Client) Do(req *http.Request, result interface{}) error {
 		return err
 	}
 
-	// Read all the data from the response.
-	data, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return err
-	}
-
-	// Unmarshal the response.
-	err = json.Unmarshal(data, result)
-	return err
+	return json.NewDecoder(resp.Body).Decode(result)
 }
 
 // SetAuthToken sets authentication token of the client.
@@ -237,8 +229,11 @@ func checkResponse(r *http.Response) error {
 		return nil
 	}
 
-	var data []byte
-	return json.NewDecoder(r.Body).Decode(&data)
+	data, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		return err
+	}
+	return fmt.Errorf(string(data))
 }
 
 // Response wraps standard http Response with default response fields
